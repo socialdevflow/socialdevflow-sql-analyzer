@@ -30,7 +30,7 @@ echo "📁  Copying plugin files..."
 rm -rf "$CURSOR_PLUGINS_DIR" "$LEGACY_PLUGINS_DIR" "$LEGACY_ORACLE_DIR"
 mkdir -p "$CURSOR_PLUGINS_DIR"
 
-for component in .cursor-plugin .claude-plugin commands rules skills scripts logo.png logo_512.png README.md CHANGELOG.md LICENSE; do
+for component in .cursor-plugin commands rules skills scripts logo.png logo_512.png README.md CHANGELOG.md LICENSE; do
   src="$PLUGIN_DIR/$component"
   if [ -e "$src" ]; then
     cp -R "$src" "$CURSOR_PLUGINS_DIR/"
