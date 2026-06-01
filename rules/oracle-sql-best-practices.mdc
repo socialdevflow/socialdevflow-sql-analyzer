@@ -1,0 +1,50 @@
+---
+description: Oracle 19c SQL best practices — always enforce when writing or reviewing SQL for Oracle databases
+globs: ["**/*.sql", "**/resources/db/**", "**/migration/**", "**/liquibase/**", "**/*.xml"]
+alwaysApply: false
+---
+
+# Oracle 19c SQL Best Practices
+
+## Always Follow These Rules
+
+### Data Types
+- Use `VARCHAR2` — never `VARCHAR` (Oracle reserves VARCHAR for future changes)
+- Use `NUMBER` for all numeric types — avoid `INT`, `INTEGER`, `FLOAT` as they silently convert
+- Use `DATE` (includes time) or `TIMESTAMP` — no `DATETIME`
+- Use `CLOB` for large text — not `TEXT`
+
+### NULL Safety
+- Always use `IS NULL` / `IS NOT NULL` — never `= NULL` or `!= NULL`
+- Prefer `NVL(col, default)` for single fallback, `COALESCE` for multiple
+- `COUNT(*)` counts all rows; `COUNT(col)` excludes NULLs — choose deliberately
+
+### Query Writing
+- Always specify column list in SELECT — avoid `SELECT *` in production code
+- Use `NOT EXISTS` instead of `NOT IN` with subqueries (NULL-safe and faster)
+- Use `MERGE` for upsert operations — no `ON DUPLICATE KEY UPDATE`
+- Use `FETCH FIRST n ROWS ONLY` for pagination (Oracle 12c+) — avoid ROWNUM tricks
+
+### Naming Conventions
+- Table names: `UPPER_SNAKE_CASE` (e.g., `PP_BRAND`, `COMPANY_BRAND`)
+- Index names: `IDX_<TABLE>_<COLUMN>` (e.g., `IDX_ORDERS_CUSTOMER_ID`)
+- Primary key constraint: `PK_<TABLE>` (e.g., `PK_PP_BRAND`)
+- Foreign key constraint: `FK_<TABLE>_<REF_TABLE>` (e.g., `FK_BRAND_STORE_BRAND`)
+- Sequence names: `SEQ_<TABLE>` (e.g., `SEQ_PP_BRAND`)
+
+### DDL Standards
+- Use `GENERATED ALWAYS AS IDENTITY` for auto-increment PKs (Oracle 12c+)
+- Specify `TABLESPACE` explicitly — don't rely on defaults in production
+- Always add `NOT NULL` constraint where applicable
+- Add comments: `COMMENT ON TABLE`, `COMMENT ON COLUMN`
+
+### Performance
+- Never apply functions to indexed columns in WHERE clause: ❌ `TRUNC(created_date) = :d` → ✅ `created_date >= TRUNC(:d) AND created_date < TRUNC(:d) + 1`
+- Avoid `SELECT COUNT(*) FROM large_table` without WHERE — use `APPROXIMATE_COUNT_DISTINCT` or stats
+- Use bind variables (`:variable_name`) — never concatenate user input into SQL strings
+- Prefer set-based operations over row-by-row PL/SQL cursors
+
+### Spring Boot / JPA Integration
+- Use `@Column(name = "UPPER_CASE_NAME")` — Oracle stores unquoted identifiers as uppercase
+- Set `spring.jpa.hibernate.ddl-auto=validate` in production — never `create` or `create-drop`
+- Use Liquibase changesets with `dbms="oracle"` condition for Oracle-specific SQL

@@ -1,0 +1,20 @@
+{
+  "name": "socialdevflow-sql-analyzer",
+  "owner": {
+    "name": "Socialdevflow",
+    "email": "info@socialdevflow.com"
+  },
+  "metadata": {
+    "description": "Analyze, optimize, and convert SQL for Oracle 19c+ inside Cursor",
+    "version": "1.0.1",
+    "homepage": "https://github.com/socialdevflow/socialdevflow-sql-analyzer",
+    "repository": "https://github.com/socialdevflow/socialdevflow-sql-analyzer"
+  },
+  "plugins": [
+    {
+      "name": "socialdevflow-sql-analyzer",
+      "source": ".",
+      "description": "Query analysis, index recommendations, dialect conversion, and Oracle SQL best-practice rules"
+    }
+  ]
+}
