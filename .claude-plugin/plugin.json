@@ -1,14 +1,13 @@
 {
   "name": "socialdevflow-sql-analyzer",
-  "displayName": "Socialdevflow SQL Analyzer",
+  "description": "Analyze, optimize, and convert SQL queries for Oracle 19c+. Index recommendations, query rewrites, and dialect conversion.",
+  "version": "1.0.1",
   "author": {
     "name": "Socialdevflow",
     "email": "info@socialdevflow.com"
   },
-  "description": "Analyze, optimize, and convert SQL queries for Oracle 19c+. Get index recommendations, query rewrites, execution plan explanations, and dialect conversion from MySQL/SQLite to Oracle syntax.",
   "keywords": ["socialdevflow", "oracle", "sql", "database", "analyzer", "index", "query", "19c"],
   "license": "MIT",
-  "version": "1.0.1",
   "logo": "logo.png",
   "homepage": "https://github.com/socialdevflow/socialdevflow-sql-analyzer",
   "repository": "https://github.com/socialdevflow/socialdevflow-sql-analyzer",

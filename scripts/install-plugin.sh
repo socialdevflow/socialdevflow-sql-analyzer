@@ -30,7 +30,7 @@ echo "📁  Copying plugin files..."
 rm -rf "$CURSOR_PLUGINS_DIR" "$LEGACY_PLUGINS_DIR" "$LEGACY_ORACLE_DIR"
 mkdir -p "$CURSOR_PLUGINS_DIR"
 
-for component in .cursor-plugin commands rules skills scripts logo.png logo_512.png README.md CHANGELOG.md LICENSE; do
+for component in .cursor-plugin .claude-plugin commands rules skills scripts logo.png logo_512.png README.md CHANGELOG.md LICENSE; do
   src="$PLUGIN_DIR/$component"
   if [ -e "$src" ]; then
     cp -R "$src" "$CURSOR_PLUGINS_DIR/"
@@ -118,9 +118,12 @@ for stale in stale_keys:
     plugins.pop(stale, None)
 plugins[key] = {"enabled": True}
 
+enabled = data.setdefault("enabledPlugins", {})
+enabled[key] = True
+
 with open(json_file, "w") as f:
     json.dump(data, f, indent=2)
-print(f"    ✓ Merged into {json_file}")
+print(f"    ✓ Merged into {json_file} (plugins + enabledPlugins)")
 PYEOF
 else
   echo "$ENABLE_ENTRY" > "$CLAUDE_SETTINGS_JSON"
@@ -135,10 +138,10 @@ echo "Next steps:"
 echo "  1. Restart Cursor IDE (or Cmd/Ctrl+Shift+P → Reload Window)"
 echo "  2. Open Cursor Agent chat"
 echo "  3. Enable plugin: Cursor Settings → Plugins → socialdevflow-sql-analyzer"
-echo "  4. Test commands (type / in Agent chat):"
-echo "     /socialdevflow-sql-analyzer:oracle-analyze"
-echo "     /socialdevflow-sql-analyzer:oracle-convert"
-echo "     (short aliases may also work: /oracle-analyze, /oracle-convert)"
+echo "  4. Test in Agent chat (type / and search 'oracle'):"
+echo "     Commands: /oracle-analyze  /oracle-convert"
+echo "     Or full:  /socialdevflow-sql-analyzer:oracle-analyze"
+echo "     Skills:   /oracle-query-analyzer  /oracle-dialect-converter"
 echo "  5. Or ask: 'analyze this Oracle query: SELECT * FROM orders'"
 echo ""
 echo "Updates: git -C \"$PLUGIN_DIR\" pull && bash \"$PLUGIN_DIR/scripts/install-plugin.sh\""

@@ -18,29 +18,54 @@ cd socialdevflow-sql-analyzer
 bash scripts/install-plugin.sh
 ```
 
-Then **Reload Window** (`Cmd+Shift+P` → Developer: Reload Window) and enable the plugin under **Cursor Settings → Plugins**.
+Then:
+
+1. **Reload Window** — `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Windows/Linux) → **Developer: Reload Window**
+2. **Enable the plugin** — **Cursor Settings → Plugins** → turn on **Socialdevflow SQL Analyzer** (`socialdevflow-sql-analyzer`)
 
 Already cloned? Run `bash scripts/install-plugin.sh` from the repo root to copy the latest files into Cursor.
 
-Slash commands appear as:
+### Slash commands (Agent chat)
 
-- `/socialdevflow-sql-analyzer:oracle-analyze`
-- `/socialdevflow-sql-analyzer:oracle-convert`
+Use **Agent** mode (not Ask). Type `/` and search `oracle`.
 
-Type `/social` or `/oracle` in Agent chat to search for them.
+| Purpose | Try first in menu | Full form (also valid) |
+|---------|-------------------|------------------------|
+| Analyze Oracle SQL | `/oracle-analyze` | `/socialdevflow-sql-analyzer:oracle-analyze` |
+| Convert to Oracle 19c | `/oracle-convert` | `/socialdevflow-sql-analyzer:oracle-convert` |
+
+**Skills** (always registered when the plugin loads — good fallback):
+
+| Purpose | Skill slash |
+|---------|-------------|
+| Query analysis | `/oracle-query-analyzer` |
+| Index advice | `/oracle-index-advisor` |
+| Dialect conversion | `/oracle-dialect-converter` |
+
+### Troubleshooting: command not found
+
+1. Re-install: `bash scripts/install-plugin.sh` from this repo (installs to `~/.cursor/plugins/local/socialdevflow-sql-analyzer`).
+2. **Reload Window** (`Cmd+Shift+P` → Developer: Reload Window).
+3. **Cursor Settings → Plugins** → enable **Socialdevflow SQL Analyzer**.
+4. In Agent chat, search `/oracle-convert` (short name) — not only the long `socialdevflow-sql-analyzer:` prefix.
+5. If commands still missing, use skill slash `/oracle-dialect-converter` or plain language: *"convert this MySQL query to Oracle 19c"*.
+
+Verify load: **Help → Toggle Developer Tools → Console**, filter `socialdevflow` — you should see `loadUserLocalPlugin socialdevflow-sql-analyzer loaded`.
 
 ## What This Plugin Does
 
 | Feature | How to Use |
 |---------|-----------|
-| 🔍 **Query Analyzer** | Run `/socialdevflow-sql-analyzer:oracle-analyze` or ask "analyze this Oracle query" |
-| 📊 **Index Advisor** | Automatically triggered when analysis finds missing indexes |
-| 🔄 **Dialect Converter** | Run `/socialdevflow-sql-analyzer:oracle-convert` or ask "convert this MySQL query to Oracle" |
-| 📐 **Best Practices Rules** | Auto-applied when editing `.sql` or Liquibase migration files |
+| 🔍 **Query Analyzer** | `/socialdevflow-sql-analyzer:oracle-analyze` (or `/oracle-analyze`) — or ask *"analyze this Oracle query"* |
+| 📊 **Index Advisor** | Runs automatically during analysis when missing indexes are found |
+| 🔄 **Dialect Converter** | `/socialdevflow-sql-analyzer:oracle-convert` (or `/oracle-convert`) — or ask *"convert this MySQL query to Oracle"* |
+| 📐 **Best Practices Rules** | Auto-attached when editing `.sql` or Liquibase migration files |
 
 ## Commands
 
-### `/socialdevflow-sql-analyzer:oracle-analyze`
+Details for each slash command (use the **full** form if the short alias is not listed).
+
+### `/socialdevflow-sql-analyzer:oracle-analyze` · `/oracle-analyze`
 Analyzes any Oracle SQL query for:
 - Full table scans and missing indexes
 - Anti-patterns (`NOT IN`, `SELECT *`, correlated subqueries)
@@ -50,7 +75,7 @@ Analyzes any Oracle SQL query for:
 
 Outputs an optimized rewrite + `CREATE INDEX` statements.
 
-### `/socialdevflow-sql-analyzer:oracle-convert`
+### `/socialdevflow-sql-analyzer:oracle-convert` · `/oracle-convert`
 Converts SQL from **MySQL / PostgreSQL / SQLite / SQL Server** to Oracle 19c:
 - Data type mapping (`VARCHAR` → `VARCHAR2`, `NOW()` → `SYSDATE`, etc.)
 - Function translation (`IFNULL` → `NVL`, `GROUP_CONCAT` → `LISTAGG`, etc.)
